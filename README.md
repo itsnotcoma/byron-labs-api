@@ -12,12 +12,12 @@ The task is to create a simple API that allows users to report cybersecurity inc
 pip install -r requirements.txt
 ```
 
-3. Set the environment variables
+3. Set the environment variables in a `.env` file at the root of the project
 
 ```bash
-export FLASK_APP=app.py
-export FLASK_ENV=development
-export FLASK_SECRET_KEY=your_secret_key
+export JWT_ALGORITHM=your_algorithm # default is HS256
+export JWT_SECRET=your_secret_key
+export JWT_EXPIRATION=your_expiration_time # default set to 30 minutes (e.g. 30)
 export MONGO_URI=your_mongo_uri
 ```
 

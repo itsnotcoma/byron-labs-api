@@ -1,16 +1,10 @@
 from datetime import datetime
 from typing import Annotated
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from fastapi import Depends
 
 from ..models.reporter import QueryReporterParams, Reporter, ReporterDTO
-
-
-def search_reporter_by_uuid(uuid: UUID):
-    if uuid in REPORTERS_DB:
-        return ReporterDTO(REPORTERS_DB[uuid])
-    return None
 
 
 def search_reporter_db(username: str):
@@ -60,20 +54,22 @@ def search_reporters_by_query(
 
 REPORTERS_DB = {
     "john.doe": {
+        "uuid": uuid4(),
         "username": "john.doe",
         "full_name": "John Doe",
         "email": "john.doe@mail.com",
-        "password": "123456",
+        "password": "$2a$12$O8yw3q5QJk.yY.l6TnFdiuOo7mYnssYQrFmjpnxxgaDsVekFkKYCu",
         "company": "ABC",
         "disabled": False,
         "created_at": datetime.now(),
         "updated_at": datetime.now(),
     },
     "jane.doe": {
+        "uuid": uuid4(),
         "username": "jane.doe",
         "full_name": "Jane Doe",
         "email": "jane.doe@mail.com",
-        "password": "123456",
+        "password": "$2a$12$C98Zsh2.e4TkUlwqqXi6suXJyz1T64FQVxzrJFb87AcwlQ2XztnWe",
         "company": "ABC",
         "disabled": True,
         "created_at": datetime.now(),

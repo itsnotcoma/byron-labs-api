@@ -11,13 +11,14 @@ class Reporter(BaseModel):
     full_name: str
     email: str
     company: str
-    disabled: bool
-    created_at: datetime
-    updated_at: datetime
 
 
 class ReporterDTO(Reporter):
+    uuid: UUID
     password: str
+    disabled: bool
+    created_at: datetime
+    updated_at: datetime
 
 
 class ReportersRes(BaseModel):

@@ -1,33 +1,53 @@
+from datetime import datetime, timedelta, timezone
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from jose import jwt
 
+from ..core import config
 from ..models.reporter import Reporter
-from ..utils.auth import current_user
+from ..utils.auth import crypt, current_user
 from ..utils.reporter import REPORTERS_DB, search_reporter_db
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/login")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login(
+    settings: Annotated[config.Settings, Depends(config.get_settings)],
+    form_data: OAuth2PasswordRequestForm = Depends(),
+):
     found = REPORTERS_DB.get(form_data.username)
     if not found:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect username"
         )
 
-    user = search_reporter_db(form_data.username)
-    if not form_data.password == user.password:
+    reporter = search_reporter_db(form_data.username)
+    if not crypt.verify(form_data.password, reporter.password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect password"
         )
 
-    if user.disabled:
+    if reporter.disabled:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user"
         )
+    print(reporter)
+    payload = {
+        "sub": reporter.username,
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_expiration),
+    }
 
-    return {"access_token": form_data.username, "token_type": "bearer"}
+    access_token = jwt.encode(
+        payload, settings.jwt_secret, algorithm=settings.jwt_algorithm
+    )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+    }
 
 
 @router.get("/me")
