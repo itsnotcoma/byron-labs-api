@@ -8,8 +8,8 @@ from ..models.incident import IncidentDTO, IncidentSeverity, QueryIncidentParams
 
 
 def search_incident_by_uuid(id: UUID):
-    if uuid in INCIDENTS_DB:
-        return INCIDENTS_DB[uuid]
+    if id in INCIDENTS_DB:
+        return INCIDENTS_DB[id]
     return None
 
 
