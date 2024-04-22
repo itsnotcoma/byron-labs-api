@@ -7,7 +7,7 @@ from fastapi import Depends
 from ..models.incident import IncidentDTO, IncidentSeverity, QueryIncidentParams
 
 
-def search_incident_by_uuid(uuid: UUID):
+def search_incident_by_uuid(id: UUID):
     if uuid in INCIDENTS_DB:
         return INCIDENTS_DB[uuid]
     return None
@@ -50,7 +50,7 @@ def search_incident_by_query(
 
 INCIDENTS_DB = [
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Network Outage",
         description="A network outage has occurred in the main office.",
         severity=IncidentSeverity.HIGH,
@@ -59,7 +59,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Hardware Failure",
         description="Multiple hardware components have malfunctioned.",
         severity=IncidentSeverity.LOW,
@@ -68,7 +68,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Data Loss",
         description="Critical data loss due to backup failure.",
         severity=IncidentSeverity.HIGH,
@@ -77,7 +77,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Security Breach",
         description="Unauthorized access to sensitive data.",
         severity=IncidentSeverity.HIGH,
@@ -86,7 +86,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Software Bug",
         description="A software bug has caused a system crash.",
         severity=IncidentSeverity.MEDIUM,
@@ -95,7 +95,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Power Outage",
         description="A power outage has occurred in the building.",
         severity=IncidentSeverity.LOW,
@@ -104,7 +104,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="System Failure",
         description="A system failure has caused data corruption.",
         severity=IncidentSeverity.HIGH,
@@ -113,7 +113,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Server Crash",
         description="A server crash has caused downtime.",
         severity=IncidentSeverity.HIGH,
@@ -122,7 +122,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Database Error",
         description="A database error has caused data inconsistency.",
         severity=IncidentSeverity.MEDIUM,
@@ -131,7 +131,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Application Failure",
         description="An application failure has caused data loss.",
         severity=IncidentSeverity.HIGH,
@@ -140,7 +140,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Network Outage",
         description="A network outage has occurred in the main office.",
         severity=IncidentSeverity.HIGH,
@@ -149,7 +149,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Hardware Failure",
         description="Multiple hardware components have malfunctioned.",
         severity=IncidentSeverity.LOW,
@@ -158,7 +158,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Data Loss",
         description="Critical data loss due to backup failure.",
         severity=IncidentSeverity.HIGH,
@@ -167,7 +167,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Security Breach",
         description="Unauthorized access to sensitive data.",
         severity=IncidentSeverity.HIGH,
@@ -176,7 +176,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Software Bug",
         description="A software bug has caused a system crash.",
         severity=IncidentSeverity.MEDIUM,
@@ -185,7 +185,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Power Outage",
         description="A power outage has occurred in the building.",
         severity=IncidentSeverity.LOW,
@@ -194,7 +194,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="System Failure",
         description="A system failure has caused data corruption.",
         severity=IncidentSeverity.HIGH,
@@ -203,7 +203,7 @@ INCIDENTS_DB = [
         updated_at=datetime.now(),
     ),
     IncidentDTO(
-        uuid=uuid4(),
+        id=uuid4(),
         title="Server Crash",
         description="A server crash has caused downtime.",
         severity=IncidentSeverity.HIGH,

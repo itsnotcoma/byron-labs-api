@@ -4,10 +4,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "Cybersecurity Incident API"
+    app_name: str = "CyberHQ API"
     jwt_algorithm: str = "HS256"
     jwt_secret: str
-    jwt_expiration: int = 30
+    jwt_expiration: int = 30  # minutes
 
     model_config = SettingsConfigDict(env_file=".env")
 

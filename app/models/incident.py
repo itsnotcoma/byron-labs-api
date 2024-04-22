@@ -21,7 +21,7 @@ class Incident(BaseModel):
 
 
 class IncidentDTO(Incident):
-    uuid: UUID
+    id: UUID
     created_at: datetime
     updated_at: datetime
 

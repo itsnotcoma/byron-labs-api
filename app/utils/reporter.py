@@ -54,9 +54,9 @@ def search_reporters_by_query(
 
 REPORTERS_DB = {
     "john.doe": {
-        "uuid": uuid4(),
+        "id": uuid4(),
         "username": "john.doe",
-        "full_name": "John Doe",
+        "name": "John Doe",
         "email": "john.doe@mail.com",
         "password": "$2a$12$O8yw3q5QJk.yY.l6TnFdiuOo7mYnssYQrFmjpnxxgaDsVekFkKYCu",
         "company": "ABC",
@@ -65,9 +65,9 @@ REPORTERS_DB = {
         "updated_at": datetime.now(),
     },
     "jane.doe": {
-        "uuid": uuid4(),
+        "id": uuid4(),
         "username": "jane.doe",
-        "full_name": "Jane Doe",
+        "name": "Jane Doe",
         "email": "jane.doe@mail.com",
         "password": "$2a$12$C98Zsh2.e4TkUlwqqXi6suXJyz1T64FQVxzrJFb87AcwlQ2XztnWe",
         "company": "ABC",

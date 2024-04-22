@@ -8,13 +8,13 @@ from pydantic import BaseModel
 
 class Reporter(BaseModel):
     username: str
-    full_name: str
+    name: str
     email: str
     company: str
 
 
 class ReporterDTO(Reporter):
-    uuid: UUID
+    id: UUID
     password: str
     disabled: bool
     created_at: datetime

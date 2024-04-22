@@ -39,7 +39,7 @@ async def get_incidents(
 
 
 @router.get("/{uuid}")
-async def get_incident(uuid: UUID):
+async def get_incident(id: UUID):
     found = search_incident_by_uuid(uuid)
     if found == None:
         raise HTTPException(
@@ -52,7 +52,7 @@ async def get_incident(uuid: UUID):
 async def create_incident(incident: Incident):
     resIncident: IncidentsRes = jsonable_encoder(incident)
     resIncident.update(
-        {"uuid": uuid4(), "created_at": datetime.now(), "updated_at": datetime.now()}
+        {"id": uuid4(), "created_at": datetime.now(), "updated_at": datetime.now()}
     )
     print(datetime.now())
     INCIDENTS_DB.append(incident)
@@ -83,7 +83,7 @@ async def update_incident(
 
 
 @router.delete("/{uuid}")
-async def delete_incident(uuid: UUID):
+async def delete_incident(id: UUID):
     found = search_incident_by_uuid(uuid)
     if found == None:
         raise HTTPException(

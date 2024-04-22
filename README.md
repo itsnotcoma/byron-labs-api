@@ -1,6 +1,6 @@
 # Byron Labs Backend
 
-Simple Cybersecurity Incident Reporting API a code test for [Byron Labs](https://github.com/ByronLabs).
+This is a simple Cybersecurity Incident Reporting API, code test for [Byron Labs](https://github.com/ByronLabs).
 
 The task is to create a simple API that allows users to report cybersecurity incidents. The API should be able to handle CRUD operations for incidents and users. The API should also have features like pagination, filtering, sorting, searching, and authentication.
 
@@ -18,7 +18,6 @@ pip install -r requirements.txt
 export JWT_ALGORITHM=your_algorithm # default is HS256
 export JWT_SECRET=your_secret_key
 export JWT_EXPIRATION=your_expiration_time # default set to 30 minutes (e.g. 30)
-export MONGO_URI=your_mongo_uri
 ```
 
 4. Run the application
