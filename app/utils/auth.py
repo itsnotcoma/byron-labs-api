@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 
 from ..core import config
@@ -32,6 +32,11 @@ async def auth_user(
         print(username)
         if username is None:
             raise unauthorized_exception
+
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired"
+        )
 
     except JWTError:
         raise unauthorized_exception
