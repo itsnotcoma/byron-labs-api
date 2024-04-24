@@ -13,11 +13,19 @@ class IncidentSeverity(str, Enum):
     HIGH = "high"
 
 
+class IncidentStatus(str, Enum):
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    PAUSED = "paused"
+    CLOSED = "closed"
+
+
 class Incident(BaseModel):
     title: str
     description: str
     severity: IncidentSeverity
     reporter: str
+    status: IncidentStatus = IncidentStatus.NOT_STARTED
 
 
 class IncidentDTO(Incident):
@@ -39,10 +47,12 @@ class QueryIncidentParams:
         title: Annotated[str, Query()] = None,
         severity: Annotated[IncidentSeverity, Query()] = None,
         reporter: Annotated[str, Query()] = None,
+        status: Annotated[IncidentStatus, Query()] = None,
     ):
         self.title = title
         self.severity = severity
         self.reporter = reporter
+        self.status = status
 
 
 class BodyIncident:
@@ -52,8 +62,10 @@ class BodyIncident:
         description: str | None = Body(None),
         severity: IncidentSeverity | None = Body(None),
         reporter: str | None = Body(None),
+        status: IncidentStatus | None = Body(None),
     ):
         self.title = title
         self.description = description
         self.severity = severity
         self.reporter = reporter
+        self.status = status

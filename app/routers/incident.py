@@ -5,8 +5,6 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
-from app.models.pagination import QueryPaginationParams
-
 from ..models.incident import (
     BodyIncident,
     Incident,
@@ -14,6 +12,10 @@ from ..models.incident import (
     IncidentsRes,
     QueryIncidentParams,
 )
+from ..models.pagination import QueryPaginationParams
+from ..models.reporter import Reporter
+from ..models.sort import QuerySortParams
+from ..utils.auth import current_user
 from ..utils.incident import (
     INCIDENTS_DB,
     search_incident_by_query,
@@ -27,8 +29,10 @@ router = APIRouter(prefix="/incident", tags=["Incident"])
 async def get_incidents(
     q: Annotated[QueryIncidentParams, Depends(QueryIncidentParams)],
     pag: Annotated[QueryPaginationParams, Depends(QueryPaginationParams)],
+    sort: Annotated[QuerySortParams, Depends(QuerySortParams)],
+    auth: Annotated[Reporter, Depends(current_user)],
 ):
-    found = search_incident_by_query(q)
+    found = search_incident_by_query(q, sort)
     incidents = found[pag.skip : pag.skip + pag.limit]
     return {
         "data": incidents,
@@ -38,9 +42,9 @@ async def get_incidents(
     }
 
 
-@router.get("/{uuid}")
-async def get_incident(id: UUID):
-    found = search_incident_by_uuid(uuid)
+@router.get("/{id}")
+async def get_incident(id: UUID, auth: Annotated[Reporter, Depends(current_user)]):
+    found = search_incident_by_uuid(id)
     if found == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found"
@@ -49,12 +53,13 @@ async def get_incident(id: UUID):
 
 
 @router.post("/", response_model=IncidentDTO)
-async def create_incident(incident: Incident):
+async def create_incident(
+    incident: Incident, auth: Annotated[Reporter, Depends(current_user)]
+):
     resIncident: IncidentsRes = jsonable_encoder(incident)
     resIncident.update(
         {"id": uuid4(), "created_at": datetime.now(), "updated_at": datetime.now()}
     )
-    print(datetime.now())
     INCIDENTS_DB.append(incident)
     return resIncident
 
@@ -63,6 +68,7 @@ async def create_incident(incident: Incident):
 async def update_incident(
     incident_id: UUID,
     q: Annotated[BodyIncident, Depends(BodyIncident)],
+    auth: Annotated[Reporter, Depends(current_user)],
 ):
     found = search_incident_by_uuid(incident_id)
     if found is None:
@@ -82,9 +88,12 @@ async def update_incident(
     return found
 
 
-@router.delete("/{uuid}")
-async def delete_incident(id: UUID):
-    found = search_incident_by_uuid(uuid)
+@router.delete("/{id}")
+async def delete_incident(
+    id: UUID,
+    auth: Annotated[Reporter, Depends(current_user)],
+):
+    found = search_incident_by_uuid(id)
     if found == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found"

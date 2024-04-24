@@ -16,8 +16,8 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.get("/me")
-async def read_users_me(reporter: Reporter = Depends(current_user)):
-    return reporter
+async def read_users_me(auth: Reporter = Depends(current_user)):
+    return auth
 
 
 @router.post("/login", response_model=AuthRes)

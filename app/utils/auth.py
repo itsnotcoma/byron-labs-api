@@ -29,7 +29,6 @@ async def auth_user(
             settings.jwt_secret,
             algorithms=[settings.jwt_algorithm],
         ).get("sub")
-        print(username)
         if username is None:
             raise unauthorized_exception
 
