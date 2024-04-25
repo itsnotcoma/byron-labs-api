@@ -6,6 +6,8 @@ from uuid import UUID
 from fastapi import Body, Query
 from pydantic import BaseModel
 
+from ..models.reporter import Reporter
+
 
 class IncidentSeverity(str, Enum):
     LOW = "low"
@@ -24,14 +26,15 @@ class Incident(BaseModel):
     title: str
     description: str
     severity: IncidentSeverity
-    reporter: str
+    reporter: Reporter
     status: IncidentStatus = IncidentStatus.NOT_STARTED
+    date: datetime
 
 
 class IncidentDTO(Incident):
     id: UUID
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime = datetime.now()
+    updated_at: datetime = datetime.now()
 
 
 class IncidentsRes(BaseModel):
@@ -61,11 +64,13 @@ class BodyIncident:
         title: str | None = Body(None),
         description: str | None = Body(None),
         severity: IncidentSeverity | None = Body(None),
-        reporter: str | None = Body(None),
+        reporter: Reporter | None = Body(None),
         status: IncidentStatus | None = Body(None),
+        date: datetime | None = Body(None),
     ):
         self.title = title
         self.description = description
         self.severity = severity
         self.reporter = reporter
         self.status = status
+        self.date = date

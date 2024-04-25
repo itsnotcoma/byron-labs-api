@@ -3,8 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from app.models.pagination import QueryPaginationParams
-from app.models.reporter import QueryReporterParams, ReportersRes
-from app.utils.reporter import REPORTERS_DB, search_reporters_by_query
+
+from ..models.reporter import Reporter, ReportersRes
+from ..utils.auth import current_user
+from ..utils.reporter import REPORTERS_DB
 
 router = APIRouter(prefix="/reporter", tags=["Reporter"])
 
@@ -12,11 +14,17 @@ router = APIRouter(prefix="/reporter", tags=["Reporter"])
 @router.get("/all", response_model=ReportersRes)
 async def get_reporters_all(
     pag: Annotated[QueryPaginationParams, Depends(QueryPaginationParams)],
+    auth: Annotated[Reporter, Depends(current_user)],
 ):
-    items = list(REPORTERS_DB.values())[pag.skip : pag.skip + pag.limit]
+    reporters = list(REPORTERS_DB.values())
+    if pag.skip:
+        reporters = reporters[pag.skip :]
+    if pag.limit:
+        reporters = reporters[: pag.limit]
+
     return {
-        "data": items,
+        "data": reporters,
         "total": len(REPORTERS_DB),
-        "skip": pag.skip,
-        "limit": pag.limit,
+        "skip": pag.skip or 0,
+        "limit": pag.limit or len(REPORTERS_DB),
     }

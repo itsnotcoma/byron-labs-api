@@ -5,6 +5,8 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
+from app.models.pagination import QueryPaginationParams
+
 from ..models.incident import (
     BodyIncident,
     Incident,
@@ -12,7 +14,6 @@ from ..models.incident import (
     IncidentsRes,
     QueryIncidentParams,
 )
-from ..models.pagination import QueryPaginationParams
 from ..models.reporter import Reporter
 from ..models.sort import QuerySortParams
 from ..utils.auth import current_user
@@ -32,13 +33,18 @@ async def get_incidents(
     sort: Annotated[QuerySortParams, Depends(QuerySortParams)],
     auth: Annotated[Reporter, Depends(current_user)],
 ):
-    found = search_incident_by_query(q, sort)
-    incidents = found[pag.skip : pag.skip + pag.limit]
+    incidents = search_incident_by_query(q, sort)
+
+    if pag.skip:
+        incidents = incidents[pag.skip :]
+    if pag.limit:
+        incidents = incidents[: pag.limit]
+
     return {
         "data": incidents,
         "total": len(INCIDENTS_DB),
-        "skip": pag.skip,
-        "limit": pag.limit,
+        "skip": pag.skip or 0,
+        "limit": pag.limit or len(INCIDENTS_DB),
     }
 
 
