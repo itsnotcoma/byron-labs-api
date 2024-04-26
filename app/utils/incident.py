@@ -7,32 +7,47 @@ from fastapi import Depends
 
 from app.models.incident import (
     IncidentDTO,
+    IncidentQueryParams,
     IncidentSeverity,
     IncidentStatus,
-    QueryIncidentParams,
 )
-from app.models.sort import QuerySortParams
-from app.utils.reporter import REPORTERS_DB
+from app.models.sort import SortQueryParams
+from app.utils.reporter import REPORTERS_DB  # Database of reporters
 
+# Seed the random number generator for reproducibility
 seed(1)
 
 
 def search_incident_by_uuid(id: UUID):
+    """
+    Search for an incident by its UUID.
+
+    This function takes a unique identifier (UUID) and returns the corresponding
+    incident from the INCIDENTS_DB. If no incident is found, it returns `None`.
+    """
     for incident in INCIDENTS_DB:
         if incident.id == id:
             return incident
-    return None
+    return None  # Return `None` if no matching incident is found
 
 
 def search_incident_by_query(
-    q: Annotated[QueryIncidentParams, Depends(QueryIncidentParams)],
-    sort: Annotated[QuerySortParams, Depends(QuerySortParams)],
+    q: Annotated[IncidentQueryParams, Depends(IncidentQueryParams)],
+    sort: Annotated[SortQueryParams, Depends(SortQueryParams)],
 ):
-    filtered_incidents = INCIDENTS_DB
+    """
+    Search for incidents based on query parameters and sorting options.
+
+    This function takes query parameters and sorting options to filter and
+    sort incidents from the INCIDENTS_DB.
+    """
+    filtered_incidents = INCIDENTS_DB  # Start with all incidents
+
+    # Apply filtering based on the query parameters
     if q.title:
         filtered_incidents = [
             incident
-            for incident in INCIDENTS_DB
+            for incident in filtered_incidents
             if q.title.lower() in incident.title.lower()
         ]
 
@@ -55,15 +70,18 @@ def search_incident_by_query(
             incident for incident in filtered_incidents if q.status == incident.status
         ]
 
+    # Determine the valid sorting fields
     valid_sort_by = ["title", "reporter", "severity", "created_at", "updated_at"]
     if sort.sort_by not in valid_sort_by:
-        sort.sort_by = "created_at"
+        sort.sort_by = "created_at"  # Default sorting field
 
+    # Determine the valid sort order (1 for ascending, -1 for descending)
     if sort.sort_order not in [-1, 1]:
-        sort.sort_order = -1
+        sort.sort_order = -1  # Default sort order (descending)
 
-    reverse = sort.sort_order == -1
+    reverse = sort.sort_order == -1  # If descending, set reverse to True
 
+    # Sort the incidents based on the specified field and order
     return sorted(
         filtered_incidents,
         key=lambda incident: getattr(incident, sort.sort_by),
@@ -71,6 +89,7 @@ def search_incident_by_query(
     )
 
 
+# A mock database of incidents with various severity, reporters, and status.
 INCIDENTS_DB = [
     IncidentDTO(
         id=uuid4(),
