@@ -81,7 +81,8 @@ async def get_incident(id: UUID, auth: Annotated[Reporter, Depends(current_user)
 
 @router.post("/", response_model=IncidentDTO)
 async def create_incident(
-    incident: Incident, auth: Annotated[Reporter, Depends(current_user)]
+    body: Annotated[IncidentBody, Depends(IncidentBody)],
+    auth: Annotated[Reporter, Depends(current_user)],
 ):
     """
     Create a new incident.
@@ -90,22 +91,24 @@ async def create_incident(
     and generates additional data, such as a unique identifier and timestamps, before adding
     it to the database.
     """
-    resIncident = jsonable_encoder(incident)  # Encode the incident as JSON
-    resIncident.update(
-        {
-            "id": uuid4(),  # Generate a unique identifier for the new incident
-            "created_at": datetime.now(),  # Set creation timestamp
-            "updated_at": datetime.now(),  # Set update timestamp
-        }
+
+    # Create a new incident with the provided data
+    new_incident = IncidentDTO(
+        id=uuid4(),  # Generate a new UUID for the incident
+        created_at=datetime.now(),  # Set the creation timestamp
+        updated_at=datetime.now(),  # Set the update timestamp
+        **jsonable_encoder(body)  # Convert the body to a dictionary
     )
-    INCIDENTS_DB.append(incident)  # Add the new incident to the database
-    return resIncident  # Return the created incident with additional data
+
+    INCIDENTS_DB.append(new_incident)  # Add the new incident to the database
+
+    return new_incident  # Return the created incident with additional data
 
 
 @router.put("/{id}", response_model=IncidentDTO)
 async def update_incident(
     id: UUID,
-    q: Annotated[IncidentBody, Depends(IncidentBody)],  # Data to update the incident
+    body: Annotated[IncidentBody, Depends(IncidentBody)],  # Data to update the incident
     auth: Annotated[Reporter, Depends(current_user)],  # Current authenticated user
 ):
     """
@@ -121,18 +124,18 @@ async def update_incident(
         )
 
     # Update the incident with new data if provided
-    if q.title is not None:
-        found.title = q.title
-    if q.description is not None:
-        found.description = q.description
-    if q.severity is not None:
-        found.severity = q.severity
-    if q.reporter is not None:
-        found.reporter = q.reporter
-    if q.status is not None:
-        found.status = q.status
-    if q.date is not None:
-        found.date = q.date
+    if body.title is not None:
+        found.title = body.title
+    if body.description is not None:
+        found.description = body.description
+    if body.severity is not None:
+        found.severity = body.severity
+    if body.reporter is not None:
+        found.reporter = body.reporter
+    if body.status is not None:
+        found.status = body.status
+    if body.date is not None:
+        found.date = body.date
     found.updated_at = datetime.now()  # Update the timestamp
 
     return found  # Return the updated incident
