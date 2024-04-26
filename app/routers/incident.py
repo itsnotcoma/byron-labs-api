@@ -91,6 +91,11 @@ async def update_incident(
         found.severity = q.severity
     if q.reporter is not None:
         found.reporter = q.reporter
+    if q.status is not None:
+        found.status = q.status
+    if q.date is not None:
+        found.date = q.date
+    found.updated_at = datetime.now()
 
     return found
 
