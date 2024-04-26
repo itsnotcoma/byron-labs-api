@@ -1,4 +1,4 @@
-# Byron Labs FastAPI Incident Management System
+# Incident Management API
 
 This is a simple Cybersecurity Incident Reporting API, code test for [Byron Labs](https://github.com/ByronLabs).
 
