@@ -18,8 +18,9 @@ seed(1)
 
 
 def search_incident_by_uuid(id: UUID):
-    if id in INCIDENTS_DB:
-        return INCIDENTS_DB[id]
+    for incident in INCIDENTS_DB:
+        if incident.id == id:
+            return incident
     return None
 
 

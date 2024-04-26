@@ -50,6 +50,7 @@ async def get_incidents(
 
 @router.get("/{id}")
 async def get_incident(id: UUID, auth: Annotated[Reporter, Depends(current_user)]):
+    print(id)
     found = search_incident_by_uuid(id)
     if found == None:
         raise HTTPException(
@@ -70,13 +71,13 @@ async def create_incident(
     return resIncident
 
 
-@router.put("/{incident_id}", response_model=IncidentDTO)
+@router.put("/{id}", response_model=IncidentDTO)
 async def update_incident(
-    incident_id: UUID,
+    id: UUID,
     q: Annotated[BodyIncident, Depends(BodyIncident)],
     auth: Annotated[Reporter, Depends(current_user)],
 ):
-    found = search_incident_by_uuid(incident_id)
+    found = search_incident_by_uuid(id)
     if found is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found"
